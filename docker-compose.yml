@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - 6379:6379
+  # MongoDB
+  mongo:
+    image: 'mongo'
+    ports:
+      - '27017:27017'
+    restart: always
+  # Mongo Express Web-based MongoDB admin interface
+  mongo_express:
+    image: mongo-express
+    container_name: mongo_express
+    depends_on:
+      - 'mongo'
+    ports:
+      - '8081:8081'
+    restart: always
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+
+  lint:
+    build:
+      context: .
+      dockerfile: .Dockerfile.test
+    command: yarn lint
+
+  test:
+    build:
+      context: .
+      dockerfile: .Dockerfile.test
+    command: yarn test
+    links:
+      - mongo
+      - redis
+    environment:
+      - TYPEORM_CONNECTION=mongodb
+      - TYPEORM_URL=mongodb://mongo:27017/lambos_bot
+      - TYPEORM_SYNCHRONIZE=true
+      - TYPEORM_LOGGING=true
+      - REDIS_URL=redis://redis:6379
