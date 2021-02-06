@@ -1,0 +1,19 @@
+{
+  "collection": "@nestjs/schematics",
+  "monorepo": true,
+  "root": "technical-analysis-bot",
+  "compilerOptions": {
+    "webpack": true
+  },
+  "projects": {
+    "web": {
+      "type": "application",
+      "root": "apps/web",
+      "entryFile": "main",
+      "sourceRoot": "apps/web/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/web/tsconfig.app.json"
+      }
+    }
+  }
+}
