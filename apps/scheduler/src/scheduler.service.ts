@@ -9,9 +9,9 @@ export class SchedulerService {
     private readonly amqpConnection: AmqpConnection,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async handleHealthCheck() {
-    this.publish('HEALTH_CHECKER', 1);
+    this.publish('HEALTH_CHECKER', 5);
   }
 
   // Monday to Friday, every 15 minutes between 2pm and 9pm
