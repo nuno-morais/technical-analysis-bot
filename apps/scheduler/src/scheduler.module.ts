@@ -4,6 +4,14 @@ import { ScheduleModule } from '@nestjs/schedule';
 import 'dotenv/config';
 import { SchedulerService } from './scheduler.service';
 
+const symbolsProvider = {
+  provide: 'SYMBOLS',
+  useValue: {
+    usMarket: process.env.SYMBOLS_US_MARKET.split(','),
+    hkdMarket: process.env.SYMBOLS_HKD_MARKET.split(','),
+  },
+};
+
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -12,6 +20,6 @@ import { SchedulerService } from './scheduler.service';
     }),
     SchedulerModule,
   ],
-  providers: [SchedulerService],
+  providers: [SchedulerService, symbolsProvider],
 })
 export class SchedulerModule {}

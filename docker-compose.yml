@@ -20,7 +20,11 @@ services:
     ports:
       - '8081:8081'
     restart: always
-  rabbitmq:
+  rabbitmq_analyser:
+    image: rabbitmq
+    ports:
+      - '5680:5672'
+  rabbitmq_scheduler:
     image: rabbitmq
     ports:
       - '5672:5672'

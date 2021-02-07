@@ -5,7 +5,6 @@ import { AnalyserInteractor } from './analyser.interactor';
 @Injectable()
 export class AnalyserConsumer {
   constructor(private readonly analyserInteractor: AnalyserInteractor) {}
-  private count = 1;
 
   @RabbitSubscribe({
     exchange: 'symbols',
@@ -16,10 +15,6 @@ export class AnalyserConsumer {
     },
   })
   public async competingPubSubHandler(msg: any) {
-    if (this.count == 1) {
-      this.analyserInteractor.call(msg.object.symbol, msg.object.resolution);
-    }
-    this.count++;
-    console.log(`Received message: ${JSON.stringify(msg)}`);
+    this.analyserInteractor.call(msg.object.symbol, msg.object.resolution);
   }
 }

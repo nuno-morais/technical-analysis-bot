@@ -1,4 +1,8 @@
-import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import {
+  AmqpConnection,
+  RabbitMQConfig,
+  RabbitMQModule,
+} from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import 'dotenv/config';
 import { ApiClient, DefaultApi } from 'finnhub';
@@ -12,6 +16,18 @@ const finnubProvider = {
     const api_key = ApiClient.instance.authentications['api_key'];
     api_key.apiKey = process.env.FINNHUB_API_KEY;
     return new DefaultApi();
+  },
+};
+
+const amqpConnectionProvider = {
+  provide: 'ANALYSER_RMQ',
+  useFactory: async (): Promise<AmqpConnection> => {
+    const config: RabbitMQConfig = {
+      uri: process.env.ANALYSER_RMQ_URL.split(','),
+    };
+    const connection = new AmqpConnection(config);
+    await connection.init();
+    return connection;
   },
 };
 
@@ -34,6 +50,7 @@ const finnubProvider = {
     AnalyserGateway,
     finnubProvider,
     AnalyserInteractor,
+    amqpConnectionProvider,
   ],
 })
 export class AnalyserModule {}

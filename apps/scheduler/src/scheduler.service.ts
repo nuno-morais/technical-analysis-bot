@@ -1,38 +1,52 @@
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
-import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Inject, Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class SchedulerService {
-  private symbols: ['AAPL'];
+  constructor(
+    @Inject('SYMBOLS') private readonly symbols,
+    private readonly amqpConnection: AmqpConnection,
+  ) {}
 
-  constructor(private readonly amqpConnection: AmqpConnection) {}
-  // Monday to Friday, every 15 minutes between 2pm and 10pm
-  @Cron('* */15 14-22 * * 1-5')
-  handleUSStocks() {
-    this.symbols.forEach((symbol) => {
-      this.amqpConnection.publish('symbols', 'symbol_analyse', {
-        event: 'SYSTEM_ANALYSE_SYMBOL',
-        object: {
-          symbol: symbol,
-          resolution: 15,
-        },
-        verb: 'analyse',
-        actor: {
-          name: 'system',
-        },
-      });
-    });
+  // Monday to Friday, every 15 minutes between 2pm and 9pm
+  @Cron('* */15 14-21 * * 1-5', {
+    name: 'US Stocks',
+    timeZone: 'Europe/Lisbon',
+  })
+  async handleUsStocks() {
+    const resolution = 15;
+    this.processStock(this.symbols.usMarket, resolution);
   }
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
-  handleTest() {
-    console.log('This is a test');
-    this.amqpConnection.publish('amz-exchange', 'amz-routing-key', {
+  // Monday to Friday, every 15 minutes between 01am and 09am
+  @Cron('* */15 01-09 * * 1-5', {
+    name: 'UKD Stocks',
+    timeZone: 'Europe/Lisbon',
+  })
+  async handleUkdStocks() {
+    const resolution = 15;
+    this.processStock(this.symbols.hkdMarket, resolution);
+  }
+
+  private async processStock(symbols: string[], resolution: number) {
+    const length = symbols.length;
+    const timeframeInSeconds = resolution * 60;
+    const waitingTime = Math.floor(timeframeInSeconds / length) * 1000;
+
+    for (const symbol of symbols) {
+      this.publish(symbol, resolution);
+      await new Promise((resolve) => setTimeout(resolve, waitingTime));
+    }
+  }
+
+  private publish(symbol: string, resolution = 15) {
+    console.log(`Emiting SYSTEM_ANALYSE_SYMBOL to ${symbol}`);
+    this.amqpConnection.publish('symbols', 'symbol_analyse', {
       event: 'SYSTEM_ANALYSE_SYMBOL',
       object: {
-        symbol: 'AAPL',
-        resolution: 15,
+        symbol: symbol,
+        resolution,
       },
       verb: 'analyse',
       actor: {
