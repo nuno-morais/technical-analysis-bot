@@ -1,6 +1,7 @@
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import 'dotenv/config';
+import * as slack from 'slack-notify';
 import * as Telegram from 'telegram-notify';
 import { NotificationsConsumer } from './notifications.consumer';
 import { NotificationsController } from './notifications.controller';
@@ -14,6 +15,11 @@ const telegramProvider = {
       chatId: process.env.TELEGRAM_CHATID,
     });
   },
+};
+
+const slackProvider = {
+  provide: 'SLACK',
+  useValue: slack(process.env.SLACK_WEBHOOK_URL),
 };
 
 @Module({
@@ -30,6 +36,11 @@ const telegramProvider = {
     NotificationsModule,
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService, telegramProvider, NotificationsConsumer],
+  providers: [
+    NotificationsService,
+    telegramProvider,
+    NotificationsConsumer,
+    slackProvider,
+  ],
 })
 export class NotificationsModule {}
