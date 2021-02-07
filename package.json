@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "heroku-postbuild": "rimraf dist && ls apps | tr '\\n' '\\0' | xargs -0 -n1 -I {} nest build {}",
     "prebuild": "rimraf dist",
-    "build": "nest build",
     "build:all": "rimraf dist && ls apps | tr '\\n' '\\0' | xargs -0 -n1 -I {} nest build {}",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
