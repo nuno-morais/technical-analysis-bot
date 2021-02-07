@@ -31,6 +31,10 @@ const slackProvider = {
           name: 'analyser',
           type: 'topic',
         },
+        {
+          name: 'healthcheck',
+          type: 'topic',
+        },
       ],
     }),
     NotificationsModule,

@@ -47,4 +47,8 @@ export class NotificationsService {
     this.sendToTelegram(message);
     this.sendToSlack(message, result);
   }
+
+  async ping() {
+    console.log(`I'm alive. ${new Date().toUTCString()}`);
+  }
 }

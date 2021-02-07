@@ -10,6 +10,11 @@ export class AnalyserInteractor {
   ) {}
 
   public async call(symbol: string, resolution: number) {
+    if (symbol == 'HEALTH_CHECKER') {
+      this.sendHealthCheck(resolution);
+      return;
+    }
+
     const result = await this.analyserGateway.aggregateIndicators(
       symbol,
       resolution,
@@ -45,5 +50,20 @@ export class AnalyserInteractor {
         },
       });
     }
+  }
+
+  private sendHealthCheck(resolution: number) {
+    console.log(`I'm alive. ${new Date().toUTCString()}`);
+    this.amqpConnection.publish('', 'healthcheck_queue', {
+      event: 'SYSTEM_CHECKER_HEALTH',
+      object: {
+        type: 'HEALTH',
+        resolution,
+      },
+      verb: 'sell',
+      actor: {
+        name: 'system',
+      },
+    });
   }
 }

@@ -18,7 +18,6 @@ export class NotificationsConsumer {
   public async competingPubSubHandler(msg: any) {
     const handler = camelCase(`ON_${msg.event}`);
 
-    console.log(handler);
     if (this[handler] != null) {
       this[handler](msg);
     } else {
@@ -33,5 +32,17 @@ export class NotificationsConsumer {
   }
   public async onSystemBuySymbol(msg: any) {
     this.notificationsService.buySymbol(msg.object.symbol, msg.object.result);
+  }
+
+  @RabbitSubscribe({
+    exchange: 'healthcheck',
+    routingKey: ['healthcheck'],
+    queue: 'healthcheck_queue',
+    queueOptions: {
+      durable: false,
+    },
+  })
+  public handleHealthCheck() {
+    this.notificationsService.ping();
   }
 }

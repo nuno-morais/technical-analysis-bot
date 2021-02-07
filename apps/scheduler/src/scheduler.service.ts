@@ -1,6 +1,6 @@
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Inject, Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class SchedulerService {
@@ -8,6 +8,11 @@ export class SchedulerService {
     @Inject('SYMBOLS') private readonly symbols,
     private readonly amqpConnection: AmqpConnection,
   ) {}
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  async handleHealthCheck() {
+    this.publish('HEALTH_CHECKER', 1);
+  }
 
   // Monday to Friday, every 15 minutes between 2pm and 9pm
   @Cron('* */15 14-21 * * 1-5', {
