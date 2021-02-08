@@ -15,7 +15,7 @@ export class SchedulerService {
   }
 
   // Monday to Friday, every 15 minutes between 2pm and 9pm
-  @Cron('* */15 14-21 * * 1-5', {
+  @Cron('0 */15 14-21 * * 1-5', {
     name: 'US Stocks',
     timeZone: 'Europe/Lisbon',
   })
@@ -25,7 +25,7 @@ export class SchedulerService {
   }
 
   // Monday to Friday, every 30 minutes between 01am and 09am
-  @Cron('* */30 01-09 * * 1-5', {
+  @Cron('0 */30 01-09 * * 1-5', {
     name: 'UKD Stocks',
     timeZone: 'Europe/Lisbon',
   })
