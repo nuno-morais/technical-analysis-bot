@@ -24,13 +24,13 @@ export class SchedulerService {
     this.processStock(this.symbols.usMarket, resolution);
   }
 
-  // Monday to Friday, every 15 minutes between 01am and 09am
-  @Cron('* */15 01-09 * * 1-5', {
+  // Monday to Friday, every 30 minutes between 01am and 09am
+  @Cron('* */30 01-09 * * 1-5', {
     name: 'UKD Stocks',
     timeZone: 'Europe/Lisbon',
   })
   async handleUkdStocks() {
-    const resolution = 15;
+    const resolution = 30;
     this.processStock(this.symbols.hkdMarket, resolution);
   }
 

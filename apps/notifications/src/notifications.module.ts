@@ -4,7 +4,6 @@ import 'dotenv/config';
 import * as slack from 'slack-notify';
 import * as Telegram from 'telegram-notify';
 import { NotificationsConsumer } from './notifications.consumer';
-import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
 
 const telegramProvider = {
@@ -39,7 +38,7 @@ const slackProvider = {
     }),
     NotificationsModule,
   ],
-  controllers: [NotificationsController],
+  controllers: [],
   providers: [
     NotificationsService,
     telegramProvider,
