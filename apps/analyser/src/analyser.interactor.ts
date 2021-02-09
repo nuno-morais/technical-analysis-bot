@@ -43,6 +43,7 @@ export class AnalyserInteractor {
         event: 'SYSTEM_SELL_SYMBOL',
         object: {
           symbol,
+          result,
         },
         verb: 'sell',
         actor: {
