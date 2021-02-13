@@ -11,6 +11,19 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "paths": {}
+    "paths": {
+      "@tab/common": [
+        "libs/common/src"
+      ],
+      "@tab/common/*": [
+        "libs/common/src/*"
+      ],
+      "@tab/core": [
+        "libs/core/src"
+      ],
+      "@tab/core/*": [
+        "libs/core/src/*"
+      ]
+    }
   }
 }

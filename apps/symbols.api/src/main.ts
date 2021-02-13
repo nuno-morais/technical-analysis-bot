@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { WebModule } from './web.module';
+import { SymbolsApiModule } from './symbols.api.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(WebModule);
+  const app = await NestFactory.create(SymbolsApiModule);
   await app.listen(3000);
 }
 bootstrap();

@@ -1,14 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { WebModule } from './../src/Web.module';
+import { SymbolsApiModule } from './../src/symbols.api.module';
 
-describe('WebController (e2e)', () => {
+describe('SymbolsApiController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [WebModule],
+      imports: [SymbolsApiModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

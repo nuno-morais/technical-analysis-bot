@@ -6,15 +6,6 @@
     "webpack": true
   },
   "projects": {
-    "web": {
-      "type": "application",
-      "root": "apps/web",
-      "entryFile": "main",
-      "sourceRoot": "apps/web/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/web/tsconfig.app.json"
-      }
-    },
     "scheduler": {
       "type": "application",
       "root": "apps/scheduler",
@@ -40,6 +31,42 @@
       "sourceRoot": "apps/notifications/src",
       "compilerOptions": {
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "symbols.api": {
+      "type": "application",
+      "root": "apps/symbols.api",
+      "entryFile": "main",
+      "sourceRoot": "apps/symbols.api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/symbols.api/tsconfig.app.json"
+      }
+    },
+    "notifications.api": {
+      "type": "application",
+      "root": "apps/notifications.api",
+      "entryFile": "main",
+      "sourceRoot": "apps/notifications.api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notifications.api/tsconfig.app.json"
       }
     }
   }
