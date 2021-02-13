@@ -1,10 +1,31 @@
 import { Module } from '@nestjs/common';
-import { SymbolsApiController } from './symbols.api.controller';
-import { SymbolsApiService } from './symbols.api.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CoreModule } from '@tab/core';
+import 'dotenv/config';
+import { getMetadataArgsStorage } from 'typeorm';
+import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
+import { PortfoliosModule } from './portfolios/portfolios.module';
 
+const options = {
+  entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
+  type: process.env.TYPEORM_CONNECTION,
+  url: process.env.TYPEORM_URL,
+  synchronize: process.env.TYPEORM_SYNCHRONIZE == 'true',
+  logging: process.env.TYPEORM_LOGGING == 'true',
+} as MongoConnectionOptions;
+
+console.log(JSON.stringify(options));
 @Module({
-  imports: [],
-  controllers: [SymbolsApiController],
-  providers: [SymbolsApiService],
+  imports: [
+    TypeOrmModule.forRoot({
+      ...options,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
+    CoreModule,
+    PortfoliosModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class SymbolsApiModule {}

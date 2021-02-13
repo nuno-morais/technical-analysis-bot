@@ -45,7 +45,7 @@ services:
       - redis
     environment:
       - TYPEORM_CONNECTION=mongodb
-      - TYPEORM_URL=mongodb://mongo:27017/lambos_bot
+      - TYPEORM_URL=mongodb://mongo:27017/technical_analysis_bot
       - TYPEORM_SYNCHRONIZE=true
       - TYPEORM_LOGGING=true
       - REDIS_URL=redis://redis:6379

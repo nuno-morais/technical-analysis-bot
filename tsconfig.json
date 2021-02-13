@@ -23,6 +23,12 @@
       ],
       "@tab/core/*": [
         "libs/core/src/*"
+      ],
+      "@tab/authentication": [
+        "libs/authentication/src"
+      ],
+      "@tab/authentication/*": [
+        "libs/authentication/src/*"
       ]
     }
   }
