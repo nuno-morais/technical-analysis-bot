@@ -14,7 +14,6 @@ const options = {
   logging: process.env.TYPEORM_LOGGING == 'true',
 } as MongoConnectionOptions;
 
-console.log(JSON.stringify(options));
 @Module({
   imports: [
     TypeOrmModule.forRoot({
