@@ -23,6 +23,10 @@ export class Portfolio {
   accountId: string;
 
   @Column()
+  @Index()
+  market: string;
+
+  @Column()
   currency: string;
 
   @Index()

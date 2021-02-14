@@ -7,6 +7,9 @@ export class CreatePortfolioDto {
   @IsString()
   product: string;
 
+  @IsEnum(['US'])
+  market: string;
+
   constructor(partial: Partial<CreatePortfolioDto>) {
     Object.assign(this, partial);
   }

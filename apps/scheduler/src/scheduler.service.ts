@@ -1,12 +1,13 @@
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { PortfolioRepository } from '@tab/core';
 
 @Injectable()
 export class SchedulerService {
   constructor(
-    @Inject('SYMBOLS') private readonly symbols,
     private readonly amqpConnection: AmqpConnection,
+    private readonly portfolioRepository: PortfolioRepository,
   ) {}
 
   @Cron(CronExpression.EVERY_5_MINUTES)
@@ -21,17 +22,19 @@ export class SchedulerService {
   })
   async handleUsStocks() {
     const resolution = 15;
-    this.processStock(this.symbols.usMarket, resolution);
+    const symbols = await this.portfolioRepository.allCurrenciesByMarket('US');
+    this.processStock(symbols, resolution);
   }
 
   // Monday to Friday, every 30 minutes between 01am and 09am
   @Cron('0 */30 01-09 * * 1-5', {
-    name: 'UKD Stocks',
+    name: 'HKG Stocks',
     timeZone: 'Europe/Lisbon',
   })
-  async handleUkdStocks() {
+  async handleHkgStocks() {
     const resolution = 30;
-    this.processStock(this.symbols.hkdMarket, resolution);
+    const symbols = await this.portfolioRepository.allCurrenciesByMarket('HKG');
+    this.processStock(symbols, resolution);
   }
 
   private async processStock(symbols: string[], resolution: number) {
