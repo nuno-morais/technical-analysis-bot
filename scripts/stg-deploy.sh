@@ -16,4 +16,12 @@ git checkout HEROKU-STG-SCHEDULER
 git rebase main
 git push origin HEROKU-STG-SCHEDULER --force-with-lease
 
+git checkout HEROKU-STG-SYMBOLS-API
+git rebase main
+git push origin HEROKU-STG-SYMBOLS-API --force-with-lease
+
+git checkout HEROKU-STG-NOTIFICATIONS-API
+git rebase main
+git push origin HEROKU-STG-NOTIFICATIONS-API --force-with-lease
+
 git checkout main
