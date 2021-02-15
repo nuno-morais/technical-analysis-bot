@@ -1,5 +1,6 @@
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
+import 'dotenv/config';
 import { SymbolsApiModule } from './symbols.api.module';
 
 async function bootstrap() {
@@ -7,6 +8,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 8000);
 }
+
 bootstrap();
