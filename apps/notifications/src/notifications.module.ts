@@ -1,28 +1,30 @@
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CoreModule } from '@tab/core';
 import 'dotenv/config';
-import * as slack from 'slack-notify';
-import * as Telegram from 'telegram-notify';
+import { getMetadataArgsStorage } from 'typeorm';
+import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
+import { SlackGateway } from './gateways/slack.gateway';
+import { TelegramGateway } from './gateways/telegram.gateway';
 import { NotificationsConsumer } from './notifications.consumer';
 import { NotificationsService } from './notifications.service';
 
-const telegramProvider = {
-  provide: Telegram,
-  useFactory: () => {
-    return new Telegram({
-      token: process.env.TELEGRAM_TOKEN,
-      chatId: process.env.TELEGRAM_CHATID,
-    });
-  },
-};
-
-const slackProvider = {
-  provide: 'SLACK',
-  useValue: slack(process.env.SLACK_WEBHOOK_URL),
-};
+const options = {
+  entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
+  type: process.env.TYPEORM_CONNECTION,
+  url: process.env.TYPEORM_URL,
+  synchronize: process.env.TYPEORM_SYNCHRONIZE == 'true',
+  logging: process.env.TYPEORM_LOGGING == 'true',
+} as MongoConnectionOptions;
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      ...options,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
     RabbitMQModule.forRoot(RabbitMQModule, {
       uri: process.env.ANALYSER_RMQ_URL.split(','),
       exchanges: [
@@ -37,13 +39,14 @@ const slackProvider = {
       ],
     }),
     NotificationsModule,
+    CoreModule,
   ],
   controllers: [],
   providers: [
     NotificationsService,
-    telegramProvider,
     NotificationsConsumer,
-    slackProvider,
+    SlackGateway,
+    TelegramGateway,
   ],
 })
 export class NotificationsModule {}
