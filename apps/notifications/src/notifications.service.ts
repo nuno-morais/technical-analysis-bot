@@ -30,7 +30,7 @@ export class NotificationsService {
   }
 
   private async sendToAccounts(text: string, fields: any): Promise<void> {
-    const notifications = await this.repository.find();
+    const notifications = await this.repository.find({ enabled: true });
 
     notifications.forEach(async (notification) => {
       switch (notification.providerName) {
