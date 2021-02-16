@@ -9,14 +9,26 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
   AuthorizationContextService,
   JwtAuthGuard,
   Scopes,
   ScopesGuard,
 } from '@tab/authentication';
+import { Portfolio } from '@tab/core';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { PortfoliosService } from './portfolios.service';
 
+@ApiBearerAuth()
+@ApiTags('portfolios')
 @Controller('portfolios')
 @UseGuards(JwtAuthGuard, ScopesGuard)
 export class PortfoliosController {
@@ -27,6 +39,17 @@ export class PortfoliosController {
 
   @Post()
   @Scopes('write:portfolios')
+  @ApiBody({
+    type: CreatePortfolioDto,
+  })
+  @ApiOperation({
+    summary: 'Create portfolio',
+  })
+  @ApiCreatedResponse({
+    description: 'Portfolio created',
+    type: Portfolio,
+  })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   create(@Body(new ValidationPipe()) createPortfolioDto: CreatePortfolioDto) {
     const accountId = this.authorizationContextService.context.accountId;
     return this.portfoliosService.create(createPortfolioDto, accountId);
@@ -34,6 +57,12 @@ export class PortfoliosController {
 
   @Get()
   @Scopes('read:portfolios')
+  @ApiOperation({ summary: 'Get all portfolios' })
+  @ApiOkResponse({
+    description: 'List of portfolios',
+    type: Portfolio,
+    isArray: true,
+  })
   findAll() {
     const accountId = this.authorizationContextService.context.accountId;
     return this.portfoliosService.findAll(accountId);
@@ -41,6 +70,11 @@ export class PortfoliosController {
 
   @Get(':id')
   @Scopes('read:portfolios')
+  @ApiOperation({ summary: 'Get portfolio by id' })
+  @ApiOkResponse({
+    description: 'Portfolio',
+    type: Portfolio,
+  })
   findOne(@Param('id') id: string) {
     const accountId = this.authorizationContextService.context.accountId;
     return this.portfoliosService.findOne(id, accountId);
@@ -48,6 +82,8 @@ export class PortfoliosController {
 
   @Delete(':id')
   @Scopes('write:portfolios')
+  @ApiOperation({ summary: 'Delete portfolio' })
+  @ApiOkResponse()
   remove(@Param('id') id: string) {
     const accountId = this.authorizationContextService.context.accountId;
     return this.portfoliosService.remove(id, accountId);
