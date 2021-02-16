@@ -47,6 +47,12 @@ export class NotificationProvider {
   @ValidateIf((o) => o.name === 'TELEGRAM')
   @IsString()
   public chatId: string;
+
+  constructor(partial: Partial<NotificationProvider> = null) {
+    if (partial != null) {
+      Object.assign(this, partial);
+    }
+  }
 }
 
 export class CreateNotificationDto {

@@ -1,9 +1,6 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
-  Logger,
-  LoggerService,
   NotFoundException,
 } from '@nestjs/common';
 import { Notification, NotificationRepository } from '@tab/core';
@@ -14,10 +11,7 @@ import { UpdateNotificationDto } from './dto/update-notification.dto';
 
 @Injectable()
 export class NotificationsApiService {
-  constructor(
-    @Inject(Logger) private readonly logger: LoggerService,
-    private readonly repository: NotificationRepository,
-  ) {}
+  constructor(private readonly repository: NotificationRepository) {}
 
   async create(
     createNotificationDto: CreateNotificationDto,

@@ -29,11 +29,18 @@ export class Notification {
     description: 'Notification id',
   })
   @Expose({ name: 'id' })
-  @Transform((input) => (input != null ? input.value.toString() : undefined), {
-    toPlainOnly: true,
-  })
   @Transform(
-    (input) => (input != null ? new ObjectID(input.value) : undefined),
+    (input) =>
+      input != null && input.value != null ? input.value.toString() : undefined,
+    {
+      toPlainOnly: true,
+    },
+  )
+  @Transform(
+    (input) =>
+      input != null && input.value != null
+        ? new ObjectID(input.value)
+        : undefined,
     {
       toClassOnly: true,
     },
