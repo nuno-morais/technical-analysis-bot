@@ -10,12 +10,14 @@ import { Portfolio, PortfolioRepository } from '@tab/core';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { ObjectID } from 'mongodb';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
+import { FinnhubGateway } from './gateways/finnhub.gateway';
 
 @Injectable()
 export class PortfoliosService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly repository: PortfolioRepository,
+    private readonly gateway: FinnhubGateway,
   ) {}
 
   async create(
@@ -33,6 +35,16 @@ export class PortfoliosService {
       throw new BadRequestException('This portfolio already exists');
     }
 
+    const isAvailable = await this.gateway.availableSymbol(
+      portfolio.market,
+      portfolio.product,
+    );
+
+    if (!isAvailable) {
+      throw new BadRequestException(
+        `The market '${portfolio.market}' with the product '${portfolio.product}' does not exists.`,
+      );
+    }
     portfolio.accountId = accountId;
 
     return this.repository.save(portfolio);
