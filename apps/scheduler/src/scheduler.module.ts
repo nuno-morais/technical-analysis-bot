@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { getMetadataArgsStorage } from 'typeorm';
 import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { SchedulerService } from './scheduler.service';
+import { WaitingService } from './waiting.service';
 
 const options = {
   entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
@@ -30,6 +31,6 @@ const options = {
     SchedulerModule,
     CoreModule,
   ],
-  providers: [SchedulerService],
+  providers: [SchedulerService, WaitingService],
 })
 export class SchedulerModule {}

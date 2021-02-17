@@ -2,12 +2,14 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PortfolioRepository } from '@tab/core';
+import { WaitingService } from './waiting.service';
 
 @Injectable()
 export class SchedulerService {
   constructor(
     private readonly amqpConnection: AmqpConnection,
     private readonly portfolioRepository: PortfolioRepository,
+    private readonly waitingService: WaitingService,
   ) {}
 
   @Cron(CronExpression.EVERY_5_MINUTES)
@@ -44,7 +46,7 @@ export class SchedulerService {
 
     for (const symbol of symbols) {
       this.publish(symbol, resolution);
-      await new Promise((resolve) => setTimeout(resolve, waitingTime));
+      await this.waitingService.wait(waitingTime);
     }
   }
 
