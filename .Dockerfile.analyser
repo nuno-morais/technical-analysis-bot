@@ -1,0 +1,11 @@
+FROM node:12 AS builder
+
+WORKDIR /app
+COPY ./package.json ./
+RUN yarn install
+COPY . .
+RUN yarn build analyser
+FROM node:12-alpine
+WORKDIR /app
+COPY --from=builder /app ./
+CMD ["node", "dist/apps/analyser/main.js"]

@@ -1,9 +1,6 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
-  Logger,
-  LoggerService,
   NotFoundException,
 } from '@nestjs/common';
 import { Portfolio, PortfolioRepository } from '@tab/core';
@@ -15,7 +12,6 @@ import { FinnhubGateway } from './gateways/finnhub.gateway';
 @Injectable()
 export class PortfoliosService {
   constructor(
-    @Inject(Logger) private readonly logger: LoggerService,
     private readonly repository: PortfolioRepository,
     private readonly gateway: FinnhubGateway,
   ) {}

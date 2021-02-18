@@ -1,0 +1,11 @@
+FROM node:12 AS builder
+
+WORKDIR /app
+COPY ./package.json ./
+RUN yarn install
+COPY . .
+RUN yarn build notifications.api
+FROM node:12-alpine
+WORKDIR /app
+COPY --from=builder /app ./
+CMD ["node", "dist/apps/notifications.api/main.js"]
