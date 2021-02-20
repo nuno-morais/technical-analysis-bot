@@ -36,6 +36,7 @@ export class Portfolio {
     example: '602aeeb176fb0900042b4d7d',
     description: 'Account id',
   })
+  @Expose({ name: 'account_id' })
   @Index()
   @Column()
   accountId: string;
