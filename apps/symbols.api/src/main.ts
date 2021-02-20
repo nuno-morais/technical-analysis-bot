@@ -6,7 +6,9 @@ import { SymbolsApiModule } from './symbols.api.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(SymbolsApiModule);
-
+  app.enableCors({
+    exposedHeaders: ['X-Total-Count'],
+  });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 

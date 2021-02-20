@@ -6,7 +6,9 @@ import { NotificationsApiModule } from './notifications.api.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(NotificationsApiModule);
-
+  app.enableCors({
+    exposedHeaders: ['X-Total-Count'],
+  });
   const config = new DocumentBuilder()
     .setTitle('Technical Analysis Bot')
     .setDescription('')
