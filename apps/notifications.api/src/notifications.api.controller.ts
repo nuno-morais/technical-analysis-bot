@@ -3,9 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -25,6 +27,7 @@ import {
   ScopesGuard,
 } from '@tab/authentication';
 import { Notification } from '@tab/core';
+import { classToPlain } from 'class-transformer';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { NotificationsApiService } from './notifications.api.service';
@@ -87,9 +90,13 @@ export class NotificationsApiController {
     type: Notification,
     isArray: true,
   })
-  findAll() {
+  async findAll(@Res() res) {
     const accountId = this.authorizationContextService.context.accountId;
-    return this.service.findAll(accountId);
+    const result = await this.service.findAll(accountId);
+
+    res.set({ 'X-Total-Count': result.length });
+    res.status(HttpStatus.OK).send(classToPlain(result));
+    return result;
   }
 
   @Get(':id')

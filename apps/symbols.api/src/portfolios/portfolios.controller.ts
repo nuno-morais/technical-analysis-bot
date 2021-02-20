@@ -3,8 +3,10 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -24,6 +26,7 @@ import {
   ScopesGuard,
 } from '@tab/authentication';
 import { Portfolio } from '@tab/core';
+import { classToPlain } from 'class-transformer';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { PortfoliosService } from './portfolios.service';
 
@@ -63,9 +66,14 @@ export class PortfoliosController {
     type: Portfolio,
     isArray: true,
   })
-  findAll() {
+  async findAll(@Res() res) {
     const accountId = this.authorizationContextService.context.accountId;
-    return this.portfoliosService.findAll(accountId);
+    const result = await this.portfoliosService.findAll(accountId);
+
+    res.set({ 'X-Total-Count': result.length });
+    res.status(HttpStatus.OK).send(classToPlain(result));
+
+    return result;
   }
 
   @Get(':id')
