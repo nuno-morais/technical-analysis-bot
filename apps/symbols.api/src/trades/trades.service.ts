@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { QueryOptions } from '@tab/common';
 import { Trade, TradeRepository } from '@tab/core';
 import { SymbolsGateway } from '@tab/symbols';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -37,8 +38,30 @@ export class TradesService {
     return this.repository.save(trade);
   }
 
-  async findAll(accountId: string): Promise<Trade[]> {
-    return this.repository.find({ accountId });
+  async findAll(
+    accountId: string,
+    query: QueryOptions,
+  ): Promise<{ count: number; items: Trade[] }> {
+    this.mapProperty(query);
+    const result = await this.repository.findAndCount({
+      where: { accountId },
+      ...query.toMongoQuery(),
+    });
+    return {
+      count: result[1],
+      items: result[0],
+    };
+  }
+
+  private mapProperty(query: QueryOptions) {
+    const map = {
+      id: '_id',
+      account_id: 'accountId',
+    };
+
+    if (map[query.sort] != null) {
+      query.sort = map[query.sort];
+    }
   }
 
   async findOne(id: string, accountId: string): Promise<Trade> {

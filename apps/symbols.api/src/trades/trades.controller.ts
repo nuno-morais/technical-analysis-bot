@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Res,
   UseGuards,
   ValidationPipe,
@@ -25,6 +26,7 @@ import {
   Scopes,
   ScopesGuard,
 } from '@tab/authentication';
+import { QueryOptions } from '@tab/common';
 import { Trade } from '@tab/core';
 import { classToPlain } from 'class-transformer';
 import { CreateTradeDto } from './dto/create-trade.dto';
@@ -66,14 +68,15 @@ export class TradesController {
     type: Trade,
     isArray: true,
   })
-  async findAll(@Res() res) {
+  async findAll(@Res() res, @Query() query: QueryOptions) {
+    query = new QueryOptions({ ...query });
     const accountId = this.authorizationContextService.context.accountId;
-    const result = await this.tradesService.findAll(accountId);
+    const result = await this.tradesService.findAll(accountId, query);
 
-    res.set({ 'X-Total-Count': result.length });
-    res.status(HttpStatus.OK).send(classToPlain(result));
+    res.set({ 'X-Total-Count': result.count });
+    res.status(HttpStatus.OK).send(classToPlain(result.items));
 
-    return result;
+    return result.items;
   }
 
   @Get(':id')
