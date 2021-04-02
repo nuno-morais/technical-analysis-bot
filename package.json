@@ -105,7 +105,9 @@
       "@tab/core/(.*)": "<rootDir>/libs/core/src/$1",
       "@tab/core": "<rootDir>/libs/core/src",
       "@tab/authentication/(.*)": "<rootDir>/libs/authentication/src/$1",
-      "@tab/authentication": "<rootDir>/libs/authentication/src"
+      "@tab/authentication": "<rootDir>/libs/authentication/src",
+      "@tab/symbols/(.*)": "<rootDir>/libs/symbols/src/$1",
+      "@tab/symbols": "<rootDir>/libs/symbols/src"
     }
   }
 }

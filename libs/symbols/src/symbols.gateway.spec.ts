@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DefaultApi } from 'finnhub';
-import { FinnhubGateway } from './finnhub.gateway';
+import { SymbolsGateway } from './symbols.gateway';
 
 const mockStockSymbols = jest.fn();
 const mockDefaultApi = jest.fn().mockImplementation(() => {
   return { stockSymbols: mockStockSymbols };
 });
 
-describe('FinnhubGateway', () => {
-  let gateway: FinnhubGateway;
+describe('SymbolsGateway', () => {
+  let gateway: SymbolsGateway;
 
   beforeEach(async () => {
     mockStockSymbols.mockClear();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        FinnhubGateway,
+        SymbolsGateway,
         {
           provide: DefaultApi,
           useClass: mockDefaultApi,
@@ -22,27 +22,27 @@ describe('FinnhubGateway', () => {
       ],
     }).compile();
 
-    gateway = module.get<FinnhubGateway>(FinnhubGateway);
+    gateway = module.get<SymbolsGateway>(SymbolsGateway);
   });
 
   it('should be defined', () => {
     expect(gateway).toBeDefined();
   });
 
-  describe('#availableSymbol', () => {
+  describe('#isAvailable', () => {
     describe('when there is no cache for the market', () => {
       it('should requests the api', async () => {
         mockStockSymbols.mockImplementation((market, cb) => {
           cb(null, [{ symbol: 'AAPL' }, { symbol: 'MSFT' }]);
         });
-        await gateway.availableSymbol('US', 'AAPL');
+        await gateway.isAvailable('US', 'AAPL');
 
         expect(mockStockSymbols).toBeCalledTimes(1);
         expect(mockStockSymbols.mock.calls[0][0]).toBe('US');
       });
 
       it('should return true', async () => {
-        const result = await gateway.availableSymbol('US', 'AAPL');
+        const result = await gateway.isAvailable('US', 'AAPL');
 
         expect(result).toBe(true);
       });
@@ -53,14 +53,14 @@ describe('FinnhubGateway', () => {
         mockStockSymbols.mockImplementation((market, cb) => {
           cb(null, [{ symbol: 'AAPL' }, { symbol: 'MSFT' }]);
         });
-        await gateway.availableSymbol('US', 'AAPL');
+        await gateway.isAvailable('US', 'AAPL');
         mockStockSymbols.mockClear();
-        await gateway.availableSymbol('US', 'AAPL');
+        await gateway.isAvailable('US', 'AAPL');
 
         expect(mockStockSymbols).toBeCalledTimes(0);
       });
       it('should return the value of the cache', async () => {
-        const result = await gateway.availableSymbol('US', 'XI');
+        const result = await gateway.isAvailable('US', 'XI');
 
         expect(result).toBe(false);
       });

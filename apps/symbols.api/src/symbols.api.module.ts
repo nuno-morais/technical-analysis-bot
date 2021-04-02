@@ -5,6 +5,7 @@ import 'dotenv/config';
 import { getMetadataArgsStorage } from 'typeorm';
 import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { PortfoliosModule } from './portfolios/portfolios.module';
+import { TradesModule } from './trades/trades.module';
 
 const options = {
   entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
@@ -23,6 +24,7 @@ const options = {
     }),
     CoreModule,
     PortfoliosModule,
+    TradesModule,
   ],
   controllers: [],
   providers: [],

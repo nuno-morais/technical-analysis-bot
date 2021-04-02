@@ -4,16 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Portfolio, PortfolioRepository } from '@tab/core';
+import { SymbolsGateway } from '@tab/symbols';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { ObjectID } from 'mongodb';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
-import { FinnhubGateway } from './gateways/finnhub.gateway';
 
 @Injectable()
 export class PortfoliosService {
   constructor(
     private readonly repository: PortfolioRepository,
-    private readonly gateway: FinnhubGateway,
+    private readonly gateway: SymbolsGateway,
   ) {}
 
   async create(
@@ -31,7 +31,7 @@ export class PortfoliosService {
       throw new BadRequestException('This portfolio already exists');
     }
 
-    const isAvailable = await this.gateway.availableSymbol(
+    const isAvailable = await this.gateway.isAvailable(
       portfolio.market,
       portfolio.product,
     );

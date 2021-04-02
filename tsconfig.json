@@ -29,6 +29,12 @@
       ],
       "@tab/authentication/*": [
         "libs/authentication/src/*"
+      ],
+      "@tab/symbols": [
+        "libs/symbols/src"
+      ],
+      "@tab/symbols/*": [
+        "libs/symbols/src/*"
       ]
     }
   }

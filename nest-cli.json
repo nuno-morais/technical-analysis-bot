@@ -77,6 +77,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications.api/tsconfig.app.json"
       }
+    },
+    "symbols": {
+      "type": "library",
+      "root": "libs/symbols",
+      "entryFile": "index",
+      "sourceRoot": "libs/symbols/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/symbols/tsconfig.lib.json"
+      }
     }
   }
 }

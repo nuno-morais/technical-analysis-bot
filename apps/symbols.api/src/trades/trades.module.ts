@@ -3,12 +3,12 @@ import { AuthenticationModule } from '@tab/authentication';
 import { CommonModule } from '@tab/common';
 import { CoreModule } from '@tab/core';
 import { SymbolsModule } from '@tab/symbols';
-import { PortfoliosController } from './portfolios.controller';
-import { PortfoliosService } from './portfolios.service';
+import { TradesController } from './trades.controller';
+import { TradesService } from './trades.service';
 
 @Module({
-  controllers: [PortfoliosController],
+  controllers: [TradesController],
+  providers: [TradesService, Logger],
   imports: [CommonModule, CoreModule, AuthenticationModule, SymbolsModule],
-  providers: [PortfoliosService, Logger],
 })
-export class PortfoliosModule {}
+export class TradesModule {}
