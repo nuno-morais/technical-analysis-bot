@@ -75,7 +75,33 @@ export class Trade {
     example: '2012-10-10',
     description: 'Opened at',
   })
-  @Column(() => Date)
+  @Transform(
+    (input) => {
+      console.log('To Plain');
+      console.dir(input);
+      return input != null && input.value != null
+        ? input.value.toISOString != null
+          ? input.value.toISOString()
+          : input.value
+        : undefined;
+    },
+    {
+      toPlainOnly: true,
+    },
+  )
+  @Transform(
+    (input) => {
+      console.log('To class');
+      console.dir(input);
+      return input != null && input.value != null
+        ? new Date(input.value)
+        : undefined;
+    },
+    {
+      toClassOnly: true,
+    },
+  )
+  @Column({ type: 'datetime' })
   opened_at: Date;
 
   @ApiProperty({
@@ -89,7 +115,33 @@ export class Trade {
     example: '2012-10-10',
     description: 'Closed at',
   })
-  @Column(() => Date)
+  @Transform(
+    (input) => {
+      console.log('To Plain');
+      console.dir(input);
+      return input != null && input.value != null
+        ? input.value.toISOString != null
+          ? input.value.toISOString()
+          : input.value
+        : undefined;
+    },
+    {
+      toPlainOnly: true,
+    },
+  )
+  @Transform(
+    (input) => {
+      console.log('To class');
+      console.dir(input);
+      return input != null && input.value != null
+        ? new Date(input.value)
+        : undefined;
+    },
+    {
+      toClassOnly: true,
+    },
+  )
+  @Column({ type: 'datetime' })
   closed_at: Date;
 
   @ApiProperty({

@@ -49,6 +49,7 @@ export class TradesService {
     if (entity == null) {
       throw new NotFoundException();
     }
+    console.dir(entity);
     return entity;
   }
 
