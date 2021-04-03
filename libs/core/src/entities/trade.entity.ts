@@ -85,8 +85,6 @@ export class Trade {
   })
   @Transform(
     (input) => {
-      console.log('To Plain');
-      console.dir(input);
       return input != null && input.value != null
         ? input.value.toISOString != null
           ? input.value.toISOString()
@@ -99,8 +97,6 @@ export class Trade {
   )
   @Transform(
     (input) => {
-      console.log('To class');
-      console.dir(input);
       return input != null && input.value != null
         ? new Date(input.value)
         : undefined;
@@ -125,8 +121,6 @@ export class Trade {
   })
   @Transform(
     (input) => {
-      console.log('To Plain');
-      console.dir(input);
       return input != null && input.value != null
         ? input.value.toISOString != null
           ? input.value.toISOString()
@@ -139,8 +133,6 @@ export class Trade {
   )
   @Transform(
     (input) => {
-      console.log('To class');
-      console.dir(input);
       return input != null && input.value != null
         ? new Date(input.value)
         : undefined;

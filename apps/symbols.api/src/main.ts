@@ -17,6 +17,7 @@ async function bootstrap() {
     .setDescription('')
     .setVersion('1.0')
     .addTag('portfolios')
+    .addTag('trades')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

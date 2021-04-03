@@ -10,5 +10,6 @@ import { PortfoliosService } from './portfolios.service';
   controllers: [PortfoliosController],
   imports: [CommonModule, CoreModule, AuthenticationModule, SymbolsModule],
   providers: [PortfoliosService, Logger],
+  exports: [PortfoliosService],
 })
 export class PortfoliosModule {}

@@ -4,6 +4,7 @@ import { CoreModule } from '@tab/core';
 import 'dotenv/config';
 import { getMetadataArgsStorage } from 'typeorm';
 import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
+import { PortfolioTradesModule } from './portfolio-trades/portfolio-trades.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { TradesModule } from './trades/trades.module';
 
@@ -25,6 +26,7 @@ const options = {
     CoreModule,
     PortfoliosModule,
     TradesModule,
+    PortfolioTradesModule,
   ],
   controllers: [],
   providers: [],
