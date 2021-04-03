@@ -65,6 +65,14 @@ export class Trade {
   product: string;
 
   @ApiProperty({
+    example: 'eToro',
+    description: 'Broker provider',
+  })
+  @Index()
+  @Column()
+  provider: string;
+
+  @ApiProperty({
     example: 2,
     description: 'Number of shares',
   })

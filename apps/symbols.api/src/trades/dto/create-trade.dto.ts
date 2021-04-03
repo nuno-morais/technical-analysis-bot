@@ -66,4 +66,12 @@ export class CreateTradeDto {
   @IsOptional()
   @IsNumber()
   closed_price: number;
+
+  @ApiProperty({
+    example: 'eToro',
+    description: 'Broker provider',
+  })
+  @IsOptional()
+  @IsString()
+  provider: string;
 }
