@@ -5,7 +5,9 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
+  Put,
   Query,
   Res,
   UseGuards,
@@ -30,6 +32,7 @@ import { QueryOptions } from '@tab/common';
 import { Trade } from '@tab/core';
 import { classToPlain } from 'class-transformer';
 import { CreateTradeDto } from './dto/create-trade.dto';
+import { UpdateTradeDto } from './dto/update-trade.dto';
 import { TradesService } from './trades.service';
 
 @ApiBearerAuth()
@@ -98,5 +101,31 @@ export class TradesController {
   remove(@Param('id') id: string) {
     const accountId = this.authorizationContextService.context.accountId;
     return this.tradesService.remove(id, accountId);
+  }
+
+  @Patch(':id')
+  @Scopes('write:trades')
+  @ApiOperation({ summary: 'Update trade' })
+  @ApiOkResponse()
+  patch(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updateTradeDto: UpdateTradeDto,
+  ) {
+    const accountId = this.authorizationContextService.context.accountId;
+    updateTradeDto.id = id;
+    return this.tradesService.update(updateTradeDto, accountId);
+  }
+
+  @Put(':id')
+  @Scopes('write:trades')
+  @ApiOperation({ summary: 'Update trade' })
+  @ApiOkResponse()
+  put(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updateTradeDto: UpdateTradeDto,
+  ) {
+    const accountId = this.authorizationContextService.context.accountId;
+    updateTradeDto.id = id;
+    return this.tradesService.update(updateTradeDto, accountId);
   }
 }

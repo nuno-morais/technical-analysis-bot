@@ -7,8 +7,10 @@ import { QueryOptions } from '@tab/common';
 import { Trade, TradeRepository } from '@tab/core';
 import { SymbolsGateway } from '@tab/symbols';
 import { classToPlain, plainToClass } from 'class-transformer';
+import * as moment from 'moment';
 import { ObjectID } from 'mongodb';
 import { CreateTradeDto } from './dto/create-trade.dto';
+import { UpdateTradeDto } from './dto/update-trade.dto';
 
 @Injectable()
 export class TradesService {
@@ -72,12 +74,65 @@ export class TradesService {
     if (entity == null) {
       throw new NotFoundException();
     }
-    console.dir(entity);
+
     return entity;
   }
 
   async remove(id: string, accountId: string) {
     await this.findOne(id, accountId);
     return this.repository.delete({ _id: new ObjectID(id), accountId });
+  }
+
+  async update(
+    updateTradeDto: UpdateTradeDto,
+    accountId: string,
+  ): Promise<Trade> {
+    const trade = plainToClass(Trade, classToPlain(updateTradeDto));
+
+    const oldTrade = await this.findOne(updateTradeDto.id, accountId);
+
+    this.validateUpdateTrade(updateTradeDto, oldTrade);
+
+    oldTrade.provider = trade.provider || oldTrade.provider;
+    oldTrade.closed_price = trade.closed_price || oldTrade.closed_price;
+    oldTrade.closed_at = trade.closed_at || oldTrade.closed_at;
+
+    await this.repository.replaceOne(
+      { _id: new ObjectID(updateTradeDto.id) },
+      trade,
+    );
+
+    return trade;
+  }
+
+  private validateUpdateTrade(updateTradeDto: UpdateTradeDto, oldTrade: Trade) {
+    const immutableData = [
+      'market',
+      'product',
+      'currency',
+      'opened_price',
+      'shares',
+    ];
+
+    const hasInvalidValue = immutableData.find(
+      (field) =>
+        updateTradeDto[field] != null &&
+        updateTradeDto[field] != oldTrade[field],
+    );
+
+    if (hasInvalidValue) {
+      throw new BadRequestException(
+        `The following field should keep the same data from old value or null: '${hasInvalidValue}'`,
+      );
+    }
+
+    if (
+      updateTradeDto.opened_at != null &&
+      !moment(updateTradeDto.opened_at).isSame(moment(oldTrade.opened_at))
+    ) {
+      throw new BadRequestException(
+        `The following field should keep the same data from old value or null: 'opened_at'`,
+      );
+    }
   }
 }
