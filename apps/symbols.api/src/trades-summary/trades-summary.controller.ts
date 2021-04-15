@@ -1,9 +1,10 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import {
   AuthorizationContextService,
   JwtAuthGuard,
   ScopesGuard,
 } from '@tab/authentication';
+import { classToPlain } from 'class-transformer';
 import { TradesSummaryInteractor } from './trades-summary.interactor';
 
 @Controller('trades-summary')
@@ -15,8 +16,13 @@ export class TradesSummaryController {
   ) {}
 
   @Get()
-  async findAll() {
+  async findAll(@Res() res) {
     const accountId = this.authorizationContextService.context.accountId;
-    return await this.tradesSummaryService.call(accountId);
+    const summary = await this.tradesSummaryService.call(accountId);
+
+    res.set({ 'X-Total-Count': summary.length });
+    res.status(HttpStatus.OK).send(classToPlain(summary));
+
+    return summary;
   }
 }

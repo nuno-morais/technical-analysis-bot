@@ -9,22 +9,45 @@ export class TradesSummaryInteractor {
 
   async call(accountId: string) {
     const result = await this.tradeRepository.find({ accountId });
-    return result.reduce((acc, trade) => {
-      if (trade.closed_at == null) {
-        acc.opened = acc.opened || { trades: [], invested: 0 };
-        acc.opened.trades.push(trade);
-        acc.opened.invested += trade.opened_price * trade.shares;
-      } else {
-        const year = moment(trade.closed_at).year();
-        acc.closed = acc.closed || {};
-        if (acc.closed[year] == null) {
-          acc.closed[year] = { trades: [], total: 0 };
+    const aggregatedValues = result.reduce(
+      (acc, trade) => {
+        if (trade.closed_at == null) {
+          acc.opened = acc.opened || { trades: [], total: 0 };
+          acc.opened.trades.push(trade);
+          acc.opened.total -= trade.opened_price * trade.shares;
+        } else {
+          const year = moment(trade.closed_at).year();
+          acc.closed = acc.closed || {};
+          if (acc.closed[year] == null) {
+            acc.closed[year] = { trades: [], total: 0 };
+          }
+          acc.closed[year].trades.push(trade);
+          acc.closed[year].total +=
+            (trade.closed_price - trade.opened_price) * trade.shares;
         }
-        acc.closed[year].trades.push(trade);
-        acc.closed[year].total +=
-          (trade.closed_price - trade.opened_price) * trade.shares;
-      }
-      return acc;
-    }, new TradesSummary());
+        return acc;
+      },
+      { opened: { trades: [], total: 0 }, closed: {} },
+    );
+
+    const summaries: TradesSummary[] = [];
+    if (aggregatedValues.opened.trades.length > 0) {
+      summaries.push(
+        new TradesSummary(
+          aggregatedValues.opened.trades,
+          aggregatedValues.opened.total,
+        ),
+      );
+    }
+    for (const closed in aggregatedValues.closed) {
+      summaries.push(
+        new TradesSummary(
+          aggregatedValues.closed[closed].trades,
+          aggregatedValues.closed[closed].total,
+          Number(closed),
+        ),
+      );
+    }
+    return summaries;
   }
 }
