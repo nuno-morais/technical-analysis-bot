@@ -2,12 +2,14 @@ import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import {
   AuthorizationContextService,
   JwtAuthGuard,
+  Scopes,
   ScopesGuard,
 } from '@tab/authentication';
 import { classToPlain } from 'class-transformer';
 import { TradesSummaryInteractor } from './trades-summary.interactor';
 
 @Controller('trades-summary')
+@Scopes('read:portfolios', 'read:trades')
 @UseGuards(JwtAuthGuard, ScopesGuard)
 export class TradesSummaryController {
   constructor(
