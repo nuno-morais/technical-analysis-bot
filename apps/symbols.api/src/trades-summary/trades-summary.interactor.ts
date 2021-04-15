@@ -48,6 +48,16 @@ export class TradesSummaryInteractor {
         ),
       );
     }
+    summaries.sort((a, b) => {
+      if (a.year == null) {
+        return -1;
+      }
+      if (b.year == null) {
+        return 1;
+      }
+      return b.year - a.year;
+    });
+
     return summaries;
   }
 }
