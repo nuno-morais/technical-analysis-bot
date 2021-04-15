@@ -7,6 +7,7 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
 import { PortfolioTradesModule } from './portfolio-trades/portfolio-trades.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { TradesModule } from './trades/trades.module';
+import { TradesSummaryModule } from './trades-summary/trades-summary.module';
 
 const options = {
   entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
@@ -27,6 +28,7 @@ const options = {
     PortfoliosModule,
     TradesModule,
     PortfolioTradesModule,
+    TradesSummaryModule,
   ],
   controllers: [],
   providers: [],
