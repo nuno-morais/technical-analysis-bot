@@ -86,6 +86,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/symbols/tsconfig.lib.json"
       }
+    },
+    "symbols.tracker": {
+      "type": "application",
+      "root": "apps/symbols.tracker",
+      "entryFile": "main",
+      "sourceRoot": "apps/symbols.tracker/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/symbols.tracker/tsconfig.app.json"
+      }
     }
   }
 }
