@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   HttpStatus,
   Query,
   Res,
@@ -27,6 +28,7 @@ export class SymbolsController {
   ) {}
 
   @Get()
+  @Header('Cache-Control', 'max-age=86400')
   async findAll(
     @Res() res,
     @Query('products') products: string,
