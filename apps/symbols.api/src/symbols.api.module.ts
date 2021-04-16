@@ -8,6 +8,7 @@ import { PortfolioTradesModule } from './portfolio-trades/portfolio-trades.modul
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { TradesModule } from './trades/trades.module';
 import { TradesSummaryModule } from './trades-summary/trades-summary.module';
+import { SymbolsModule } from './symbols/symbols.module';
 
 const options = {
   entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
@@ -29,6 +30,7 @@ const options = {
     TradesModule,
     PortfolioTradesModule,
     TradesSummaryModule,
+    SymbolsModule,
   ],
   controllers: [],
   providers: [],

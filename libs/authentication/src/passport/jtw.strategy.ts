@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   private static buildStrategyInput() {
     const result = {
       algorithms: [process.env.AUTH_ALGORITHM || 'RS256'],
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: this.fromAuthHeaderAsBearerTokenOrUrlQueryParameter(),
     };
     if (process.env.AUTH_SECRET != null) {
       return {
@@ -34,6 +34,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         rateLimit: true,
       }),
     };
+  }
+
+  private static fromAuthHeaderAsBearerTokenOrUrlQueryParameter() {
+    const fnHeader = ExtractJwt.fromAuthHeaderAsBearerToken();
+    const fnQueryParameter = ExtractJwt.fromUrlQueryParameter('authorization');
+    return (request) => fnHeader(request) || fnQueryParameter(request);
   }
 
   public validate = (payload: Claim) =>
