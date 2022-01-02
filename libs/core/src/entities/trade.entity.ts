@@ -150,4 +150,40 @@ export class Trade {
   })
   @Column()
   closed_price: number;
+
+  @Index()
+  @Column()
+  trade_id: string;
+
+  @Transform(
+    (input) => {
+      return input != null && input.value != null
+        ? input.value.toISOString != null
+          ? input.value.toISOString()
+          : input.value
+        : undefined;
+    },
+    {
+      toPlainOnly: true,
+    },
+  )
+  @Transform(
+    (input) => {
+      return input != null && input.value != null
+        ? new Date(input.value)
+        : undefined;
+    },
+    {
+      toClassOnly: true,
+    },
+  )
+  @Column({ type: 'datetime' })
+  updated_at: Date;
+
+  @ApiProperty({
+    example: 120,
+    description: 'Price per share',
+  })
+  @Column()
+  fees: number[];
 }
